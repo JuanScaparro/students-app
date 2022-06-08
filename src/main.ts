@@ -1,11 +1,13 @@
 import './style.css'
 
-const app = document.querySelector<HTMLDivElement>('#app')!
-
-app.innerHTML = `
-  <h1>Hello Vite!</h1>
-  <a href="https://vitejs.dev/guide/features.html" target="_blank">Documentation</a>
-`
+const studentsTbody = document.getElementById('students-tbody')!
+const aprovedTbody = document.getElementById('aproved-tbody')!
+const failedTbody = document.getElementById('failed-tbody')!
+const maleAprovedTbody = document.getElementById('maleAproved-tbody')!
+const femaleAprovedTbody = document.getElementById('femaleAproved-tbody')!
+const maleFailedTbody = document.getElementById('maleFailed-tbody')!
+const femaleFailedTbody = document.getElementById('femaleFailed-tbody')!
+const studentsThead = document.querySelectorAll('.students-thead')!
 
 
 /**
@@ -26,6 +28,7 @@ app.innerHTML = `
  * total de maleAproved
  * total de femaleAproved
  * 
+ * 
  * total de failed
  * total de maleFailed
  * total de femaleFailed
@@ -43,12 +46,16 @@ const constants = {
   FEMALE: 'female' 
 }
 
+
+
 type Student = {
   name: string;
   lastName: string;
   gender: string;
   note: number;
 }
+
+  
 
 const noteRef: number = 6;
 
@@ -166,7 +173,104 @@ const totales = {
   'Porcentaje Reprobados': percentFailed
 }
 
+function createTable(numTable: number, arrToRead: Student[], bodyToAppend: HTMLElement){
+  createHeaderTable( numTable )
+  createBodyTable(arrToRead, bodyToAppend)
+}
 
+function createHeaderTable(indexTable: number){
+  const keysArr: string[] = Object.keys(students[0]);
+  keysArr.unshift('ID');
+  const tr = document.createElement('tr')
+  let template = ''
+  keysArr.forEach( (title) => {
+    template = template + `<th scope="col">${title}</th>`
+    
+  } )  
+  tr.innerHTML = template
+  studentsThead[indexTable].appendChild(tr)
+}
+
+function createBodyTable(arrToRead: Student[], bodyToAppend: HTMLElement){
+  arrToRead.forEach( (student, index) => {
+    const template = `
+    <th scope="row">${index + 1}</th>
+    <td>${student.name}</td>
+    <td>${student.lastName}</td>
+    <td>${student.gender}</td>
+    <td>${student.note}</td>
+    `
+    const tr = document.createElement('tr')
+    tr.innerHTML =  template
+    bodyToAppend.appendChild(tr)
+  })
+}
+
+
+
+const tables = [
+  {
+    numTable: 0,
+    arrToRead: students,
+    bodyToAppend: studentsTbody
+  },
+  {
+    numTable: 1,
+    arrToRead: aproved,
+    bodyToAppend: aprovedTbody
+  },
+  {
+    numTable: 2,
+    arrToRead: failed,
+    bodyToAppend: failedTbody
+  },
+  {
+    numTable: 3,
+    arrToRead: maleAproved,
+    bodyToAppend: maleAprovedTbody
+  },
+  {
+    numTable: 4,
+    arrToRead: femaleAproved,
+    bodyToAppend: femaleAprovedTbody
+  },
+  {
+    numTable: 5,
+    arrToRead: maleFailed,
+    bodyToAppend: maleFailedTbody
+  },
+  {
+    numTable: 6,
+    arrToRead: femaleFailed,
+    bodyToAppend: femaleFailedTbody
+  },
+  
+]
+
+
+
+function init(){
+  tables.forEach( table => createTable( table.numTable, table.arrToRead, table.bodyToAppend))
+}
+
+init();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
 console.table(students);
 
 
@@ -204,4 +308,5 @@ console.groupEnd();
 console.groupCollapsed('TOTALES');
    console.table(totales);
 console.groupEnd();
+*/
 
